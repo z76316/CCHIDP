@@ -6,11 +6,11 @@ import json
 import urllib
 
 class CarrefourObject():
-	def __init__(self, Name, ItemQtyPerPackFormat, Price, Specification):
-		self.Name = Name
-		self.ItemQtyPerPackFormat = ItemQtyPerPackFormat #1入
-		self.Price = Price
-		self.Specification = Specification #125g克
+	def __init__(self, product_name, product_quantity, product_price, product_unit):
+		self.product_name = product_name
+		self.product_quantity = product_quantity #1入
+		self.product_price = product_price
+		self.product_unit = product_unit #125g克
 
 class CarrefourSearch():
 
@@ -56,13 +56,20 @@ class CarrefourSearch():
 
 	def getObjectList(self):
 
+		variableDict = {
+							'product_name': 'Name', 
+							'product_quantity': 'ItemQtyPerPackFormat', 
+							'product_price': 'Price', 
+							'product_unit': 'Specification'
+						}
+
 		# json to onject
 		carrefourObject_list = [
 									CarrefourObject(
-														json['Name'], 
-														json['ItemQtyPerPackFormat'], 
-														json['Price'], 
-														json['Specification']
+														json[ variableDict['product_name'] ], 
+														json[ variableDict['product_quantity'] ], 
+														json[ variableDict['product_price'] ], 
+														json[ variableDict['product_unit'] ]
 													) 
 									for json in self.getJsonList()
 								]
@@ -70,11 +77,11 @@ class CarrefourSearch():
 		return carrefourObject_list
 
 class HonestbeeObject():
-	def __init__(self, title, amountPerUnit, price, size):
-		self.title = title
-		self.amountPerUnit = amountPerUnit #1入
-		self.price = price
-		self.size = size #125g克
+	def __init__(self, product_name, product_quantity, product_price, product_unit):
+		self.product_name = product_name
+		self.product_quantity = product_quantity #1入
+		self.product_price = product_price
+		self.product_unit = product_unit #125g克
 
 class HonestbeeSearch():
 
@@ -121,13 +128,20 @@ class HonestbeeSearch():
 
 	def getObjectList(self):
 
+		variableDict = {
+							'product_name': 'title', 
+							'product_quantity': 'amountPerUnit', 
+							'product_price': 'price', 
+							'product_unit': 'size'
+						}
+
 		# json to onject
 		Object_list = [
 							HonestbeeObject(
-												json['title'], 
-												json['amountPerUnit'], 
-												json['price'], 
-												json['size']
+												json[ variableDict['product_name'] ], 
+												json[ variableDict['product_quantity'] ], 
+												json[ variableDict['product_price'] ], 
+												json[ variableDict['product_unit'] ]
 											) 
 							for json in self.getJsonList()
 					 	]
@@ -149,6 +163,6 @@ print len(something)
 
 for x in something:
 	print "----------------------------------------content--------------------------------------------------"
-	print x.Name
+	print x.product_name
 
 
