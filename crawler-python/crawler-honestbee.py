@@ -13,12 +13,13 @@ r = requests.get(url)
 sourceStr = r.content
 start = sourceStr.find('{"products":[')
 end = sourceStr.find('}],"categories"')
+
 str1 = sourceStr[start: end]
+
 strList = str1.split('{"id"')
 
 num = len(strList)
 lastIndex = num - 1
-
 strList2 = []
 for i in range(num):
 	if i != 0:

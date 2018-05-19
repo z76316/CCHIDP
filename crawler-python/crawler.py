@@ -3,51 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import json
-
-url = "https://online.carrefour.com.tw/search?key=%E9%B1%88%E9%AD%9A%E9%A6%99%E7%B5%B2&categoryId="
-r = requests.get(url)
-# print r.content
-
-
-soup = BeautifulSoup(r.content)
-# print soup
-
-
-# links = soup.find_all("a")
-# for link in links:
-	# print link.get("href")
-
-g_data = soup.find_all("script", {"type": "text/javascript"})
-print "**********************************************************************************************"
-
-
-productInfo_bsTag = g_data[9]
-productInfo_bsNavigableString = productInfo_bsTag.string # tag to NavigableString
-productInfo_bsStr = productInfo_bsNavigableString.encode('utf8') # unicode to str
-productInfo_bsStr_remove_backslash = productInfo_bsStr.replace('\\', '') #remove \
-
-infoList = re.findall(r'\[(.*?)\]', productInfo_bsStr_remove_backslash) # retrieve product info, [str]
-info = infoList[0] # str
-
-product_str_List = info.split('},{') # get products list, [str]
-
-product_str_List_forJson = []
-for x in product_str_List:
-
-	if x[0] != '{': 
-		x = '{' + x
-
-	if x[-1] != '}': 
-		x = x + '}'
-
-	# print x
-	product_str_List_forJson.append(x)
-
-
-
-product_dict_list = [json.loads(x) for x in product_str_List_forJson] #str to json
-
-
+import urllib
 
 class CarrefourObject():
 	def __init__(self, Name, ItemQtyPerPackFormat, Price, Specification):
@@ -55,28 +11,144 @@ class CarrefourObject():
 		self.ItemQtyPerPackFormat = ItemQtyPerPackFormat #1入
 		self.Price = Price
 		self.Specification = Specification #125g克
+
+class CarrefourSearch():
+
+	def __init__(self, searchKeyWord):
+		self.searchKeyWord = searchKeyWord
+
+	def getSourceStr(self):
+
+		searchKeyWord_transform = urllib.quote(self.searchKeyWord)
+		url = "https://online.carrefour.com.tw/search?key=" + searchKeyWord_transform
+		r = requests.get(url)
+
+		sourceStr = r.content
+		return sourceStr
+
+	def getJsonList(self):
+
+		sourceStr2 = self.getSourceStr().replace('\\', '')
+
+		start = sourceStr2.find('"ProductListModel":[')
+		end = sourceStr2.find('],"ProductIds"')
+
+		str1 = sourceStr2[start: end]
+
+		strList = str1.split('{"Id"')
+
+		num = len(strList)
+		lastIndex = num - 1
+		strList2 = []
+		for i in range(num):
+			if i != 0:
+				x = '{"id"' + strList[i]
+
+				if i == lastIndex:
+					x = x 
+				else:
+					x = x[:-1]
+
+				strList2.append(x)
+		jsonList = [json.loads(x) for x in strList2]
+
+		return jsonList
+
+	def getObjectList(self):
+
+		# json to onject
+		carrefourObject_list = [
+									CarrefourObject(
+														json['Name'], 
+														json['ItemQtyPerPackFormat'], 
+														json['Price'], 
+														json['Specification']
+													) 
+									for json in self.getJsonList()
+								]
+
+		return carrefourObject_list
+
+class HonestbeeObject():
+	def __init__(self, title, amountPerUnit, price, size):
+		self.title = title
+		self.amountPerUnit = amountPerUnit #1入
+		self.price = price
+		self.size = size #125g克
+
+class HonestbeeSearch():
+
+	def __init__(self, searchKeyWord):
+		self.searchKeyWord = searchKeyWord
+
+	def getSourceStr(self):
+
+		searchKeyWord_transform = urllib.quote(self.searchKeyWord)
+		url = "https://www.honestbee.tw/zh-TW/groceries/stores/american-wholesaler/search?q=" + searchKeyWord_transform
+		r = requests.get(url)
+
+		sourceStr = r.content
+		return sourceStr
+
+	def getJsonList(self):
+
+		sourceStr2 = self.getSourceStr()
+
+		start = sourceStr2.find('{"products":[')
+		end = sourceStr2.find('}],"categories"')
+
+		str1 = sourceStr2[start: end]
+
+		strList = str1.split('{"id"')
+
+		num = len(strList)
+		lastIndex = num - 1
+		strList2 = []
+		for i in range(num):
+			if i != 0:
+				x = '{"id"' + strList[i]
+
+				if i == lastIndex:
+					x = x + '}'
+				else:
+					x = x[:-1]
+
+				strList2.append(x)
+
+		jsonList = [json.loads(x) for x in strList2]
 		
+		return jsonList
 
-# json to onject
-carrefourObject_list = [
-							CarrefourObject(
-												product_dic['Name'], 
-												product_dic['ItemQtyPerPackFormat'], 
-												product_dic['Price'], 
-												product_dic['Specification']
+	def getObjectList(self):
+
+		# json to onject
+		Object_list = [
+							HonestbeeObject(
+												json['title'], 
+												json['amountPerUnit'], 
+												json['price'], 
+												json['size']
 											) 
-							for product_dic in product_dict_list
-						]
+							for json in self.getJsonList()
+					 	]
+
+		return Object_list
+
+
+a = CarrefourSearch('牛奶')
+b = a.getObjectList()
 
 
 
-# something = carrefourObject_list
+something = b
 # print "----------------------------------------content--------------------------------------------------"
 # print something
 # print "----------------------------------------type-----------------------------------------------------"
-# print type(something)
-# print len(something)
+print type(something)
+print len(something)
 
-for carrefourObject in carrefourObject_list: 
-	print carrefourObject.Name
+for x in something:
+	print "----------------------------------------content--------------------------------------------------"
+	print x.Name
+
 
