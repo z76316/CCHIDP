@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 import json
 
-url = "https://www.honestbee.tw/zh-TW/groceries/stores/american-wholesaler/search?q=%E5%92%96%E5%95%A1"
+url = "https://www.honestbee.tw/zh-TW/groceries/stores/american-wholesaler/search?q=%E9%9B%9E%E7%B2%BE"
 r = requests.get(url)
 
 sourceStr = r.content
@@ -64,5 +64,5 @@ print len(something)
 
 for x in something: 
 	print "---------------------------------------------------------------------------------------------"
-	print x.title
+	print x.title, x.price, x.size
 
