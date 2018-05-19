@@ -19,8 +19,7 @@ soup = BeautifulSoup(r.content)
 
 g_data = soup.find_all("script", {"type": "text/javascript"})
 print "**********************************************************************************************"
-
-
+for x in g_data: print x
 productInfo_bsTag = g_data[9]
 productInfo_bsNavigableString = productInfo_bsTag.string # tag to NavigableString
 productInfo_bsStr = productInfo_bsNavigableString.encode('utf8') # unicode to str
