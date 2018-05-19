@@ -5,7 +5,7 @@ import re
 import json
 import urllib
 
-class CarrefourObject():
+class WebObject():
 	def __init__(self, product_name, product_quantity, product_price, product_unit):
 		self.product_name = product_name
 		self.product_quantity = product_quantity #1入
@@ -65,7 +65,7 @@ class CarrefourSearch():
 
 		# json to onject
 		carrefourObject_list = [
-									CarrefourObject(
+									WebObject(
 														json[ variableDict['product_name'] ], 
 														json[ variableDict['product_quantity'] ], 
 														json[ variableDict['product_price'] ], 
@@ -75,13 +75,6 @@ class CarrefourSearch():
 								]
 
 		return carrefourObject_list
-
-class HonestbeeObject():
-	def __init__(self, product_name, product_quantity, product_price, product_unit):
-		self.product_name = product_name
-		self.product_quantity = product_quantity #1入
-		self.product_price = product_price
-		self.product_unit = product_unit #125g克
 
 class HonestbeeSearch():
 
@@ -137,7 +130,7 @@ class HonestbeeSearch():
 
 		# json to onject
 		Object_list = [
-							HonestbeeObject(
+							WebObject(
 												json[ variableDict['product_name'] ], 
 												json[ variableDict['product_quantity'] ], 
 												json[ variableDict['product_price'] ], 
@@ -149,7 +142,7 @@ class HonestbeeSearch():
 		return Object_list
 
 
-a = CarrefourSearch('牛奶')
+a = HonestbeeSearch('牛奶')
 b = a.getObjectList()
 
 
