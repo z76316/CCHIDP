@@ -160,6 +160,9 @@ print len(something)
 
 for x in something:
 	print "----------------------------------------content--------------------------------------------------"
-	print x.product_name
+	print 'product_name: %s' %(x.product_name)
+	print 'product_price: %s' %(x.product_price)
+	print 'product_quantity: %s' %(x.product_quantity)
+	print 'product_unit: %s' %(x.product_unit)
 
 
