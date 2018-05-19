@@ -14,6 +14,13 @@ class WebObject():
 
 class CarrefourSearch():
 
+	variableDict = {
+							'product_name': 'Name', 
+							'product_quantity': 'ItemQtyPerPackFormat', 
+							'product_price': 'Price', 
+							'product_unit': 'Specification'
+						}
+
 	def __init__(self, searchKeyWord):
 		self.searchKeyWord = searchKeyWord
 
@@ -56,27 +63,29 @@ class CarrefourSearch():
 
 	def getObjectList(self):
 
-		variableDict = {
-							'product_name': 'Name', 
-							'product_quantity': 'ItemQtyPerPackFormat', 
-							'product_price': 'Price', 
-							'product_unit': 'Specification'
-						}
+		
 
 		# json to onject
 		carrefourObject_list = [
 									WebObject(
-														json[ variableDict['product_name'] ], 
-														json[ variableDict['product_quantity'] ], 
-														json[ variableDict['product_price'] ], 
-														json[ variableDict['product_unit'] ]
-													) 
+												json[ self.variableDict['product_name'] ], 
+												json[ self.variableDict['product_quantity'] ], 
+												json[ self.variableDict['product_price'] ], 
+												json[ self.variableDict['product_unit'] ]
+											) 
 									for json in self.getJsonList()
 								]
 
 		return carrefourObject_list
 
 class HonestbeeSearch():
+
+	variableDict = {
+							'product_name': 'title', 
+							'product_quantity': 'amountPerUnit', 
+							'product_price': 'price', 
+							'product_unit': 'size'
+						}
 
 	def __init__(self, searchKeyWord):
 		self.searchKeyWord = searchKeyWord
@@ -121,28 +130,23 @@ class HonestbeeSearch():
 
 	def getObjectList(self):
 
-		variableDict = {
-							'product_name': 'title', 
-							'product_quantity': 'amountPerUnit', 
-							'product_price': 'price', 
-							'product_unit': 'size'
-						}
+		
 
 		# json to onject
 		Object_list = [
 							WebObject(
-												json[ variableDict['product_name'] ], 
-												json[ variableDict['product_quantity'] ], 
-												json[ variableDict['product_price'] ], 
-												json[ variableDict['product_unit'] ]
-											) 
+										json[ self.variableDict['product_name'] ], 
+										json[ self.variableDict['product_quantity'] ], 
+										json[ self.variableDict['product_price'] ], 
+										json[ self.variableDict['product_unit'] ]
+									) 
 							for json in self.getJsonList()
 					 	]
 
 		return Object_list
 
 
-a = HonestbeeSearch('牛奶')
+a = CarrefourSearch('牛奶')
 b = a.getObjectList()
 
 
