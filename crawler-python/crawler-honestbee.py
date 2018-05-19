@@ -3,8 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import json
+import urllib
 
-url = "https://www.honestbee.tw/zh-TW/groceries/stores/american-wholesaler/search?q=%E9%9B%9E%E7%B2%BE"
+searchKeyWord = '汽水'
+searchKeyWord_transform = urllib.quote(searchKeyWord)
+url = "https://www.honestbee.tw/zh-TW/groceries/stores/american-wholesaler/search?q=" + searchKeyWord_transform
 r = requests.get(url)
 
 sourceStr = r.content
@@ -64,5 +67,8 @@ print len(something)
 
 for x in something: 
 	print "---------------------------------------------------------------------------------------------"
-	print x.title, x.price, x.size
+	print x.title
+	print x.amountPerUnit
+	print x.price
+	print x.size
 

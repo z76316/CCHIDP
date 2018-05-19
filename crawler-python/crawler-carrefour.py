@@ -3,15 +3,21 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import json
+import urllib
 
-url = "https://online.carrefour.com.tw/search?key=%E5%86%B7%E6%B0%A3%E6%A9%9F&categoryId="
+searchKeyWord = '汽水'
+searchKeyWord_transform = urllib.quote(searchKeyWord)
+url = "https://online.carrefour.com.tw/search?key=" + searchKeyWord_transform
 r = requests.get(url)
 
 sourceStr = r.content
 sourceStr2 = sourceStr.replace('\\', '')
+
 start = sourceStr2.find('"ProductListModel":[')
 end = sourceStr2.find('],"ProductIds"')
+
 str1 = sourceStr2[start: end]
+
 strList = str1.split('{"Id"')
 
 num = len(strList)
@@ -64,5 +70,8 @@ print len(something)
 
 for x in something:
 	print "----------------------------------------content--------------------------------------------------"
-	print x.Name, x.ItemQtyPerPackFormat, x.Price, x.Specification
+	print x.Name
+	print x.ItemQtyPerPackFormat
+	print x.Price
+	print x.Specification
 
